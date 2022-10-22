@@ -1,0 +1,133 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card-create-row-item div.dataTables_filter{
+            text-align: left!important;
+        }
+        .card-create-row-item div.dataTables_filter input{
+            width: 90%!important;
+        }
+        .card-create-row-item {
+            padding: 10px 0 5px 15px;
+        }
+        .card{
+            padding: 0;
+        }
+        .hotel-save-btn,.hotel-create-dropdown{
+            margin-left: 0.5em;
+        }
+        .dataTables_wrapper{
+            overflow: -webkit-paged-y;
+        }
+        .btn-primary {
+            color: #4e73df;
+            background-color: #fff;
+            border-color: #4e73df;
+        }
+        .form-control{
+            color: #4e73df;
+            background-color: #fff;
+            border-color: #4e73df;
+            height: 40px;
+            border-radius: .4rem;
+        }
+        #collapseCardExample{
+            padding: 10px;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+      <!-- DataTales Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Бүртгэлтэй аяллын багцын жагсаалт</h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Онцлох</th>
+                  <th>Улс</th>
+                  <th>Хот</th>
+                  <th>Явах огноо</th>
+                  <th>Ирэх огноо</th>
+                  <th>Хоол</th>
+                  <th>Даатгал</th>
+                  <th>Угтах үйлчилгээ</th>
+                  <th>Огноо</th>
+                  <th>Засах</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>ID</th>
+                  <th>Онцлох</th>
+                  <th>Улс</th>
+                  <th>Хот</th>
+                  <th>Явах огноо</th>
+                  <th>Ирэх огноо</th>
+                  <th>Хоол</th>
+                  <th>Даатгал</th>
+                  <th>Угтах үйлчилгээ</th>
+                  <th>Огноо</th>
+                  <th>Засах</th>
+                </tr>
+              </tfoot>
+              <tbody id="trip_list">
+                {% if tripList is not null %}
+                    {% for item in tripList %}
+                        <tr>
+                            <td>{{ item.id }}</td>
+                            <td>
+                                {% if item.is_special == '1' %}
+                                    <span style="font-weight: bold;">Онцлох</span>
+                                {% else %}
+                                    Энгийн
+                                {% endif %}
+                            </td>
+                            <td>{{ item.country_name }}</td>
+                            <td>{{item.city_name}}</td>
+                            <td>{{item.departure_datetime}}</td>
+                            <td>{{item.arrival_datetime}}</td>
+                            <td>{{item.meal}}</td>
+                            <td>{{item.insurance}}</td>
+                            <td>{{item.welcome_service}}</td>
+                            <td>{{item.created_at}}</td>
+                            <td>
+                                {%if item.is_active == 1%}
+                                    <span style="color: #34ce57">        
+                                        Идэвхитэй
+                                    </span>
+                                {%else%}
+                                    <span style="color: #ea4335">        
+                                        Идэвхигүй
+                                    </span>
+                                {%endif%}
+                                
+                                <a href={{path('edit_trip', {trip_id: item.id} )}}>Засах</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="1">Бүртгэлтэй аяллын мэдээлэл байхгүй байна.</td>
+                    </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- /.container-fluid -->
+
+{% endblock %}

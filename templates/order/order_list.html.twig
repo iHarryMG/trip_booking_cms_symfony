@@ -1,0 +1,100 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card-create-row-item div.dataTables_filter{
+            text-align: left!important;
+        }
+        .card-create-row-item div.dataTables_filter input{
+            width: 90%!important;
+        }
+        .card-create-row-item {
+            padding: 10px 0 5px 15px;
+        }
+        .card{
+            padding: 0;
+        }
+        .hotel-save-btn,.hotel-create-dropdown{
+            margin-left: 0.5em;
+        }
+        .dataTables_wrapper{
+            overflow: -webkit-paged-y;
+        }
+        .btn-primary {
+            color: #4e73df;
+            background-color: #fff;
+            border-color: #4e73df;
+        }
+        .form-control{
+            color: #4e73df;
+            background-color: #fff;
+            border-color: #4e73df;
+            height: 40px;
+            border-radius: .4rem;
+        }
+        #collapseCardExample{
+            padding: 10px;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+      <!-- DataTales Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Бүх захиалгын жагсаалт</h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Захиалгын ID</th>
+                  <th>Овог</th>
+                  <th>Нэр</th>
+                  <th>Захиалгын төлөв</th>
+                  <th>Захиалгын огноо, цаг</th>
+                  <th>Дэлгэрэнгүй</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>Захиалгын ID</th>
+                  <th>Овог</th>
+                  <th>Нэр</th>
+                  <th>Захиалгын төлөв</th>
+                  <th>Захиалгын огноо, цаг</th>
+                  <th>Дэлгэрэнгүй</th>
+                </tr>
+              </tfoot>
+              <tbody>
+                {% if orderList is not null %}
+                    {% for item in orderList %}
+                        <tr>
+                            <td>{{ item.order_id }}</td>
+                            <td>{{ item.last_name }}</td>
+                            <td>{{item.first_name}}</td>
+                            <td>{{item.order_status}}</td>
+                            <td>{{item.created_at}}</td>
+                            <td><a href={{path('order_detail', {order_id: item.order_id} )}}>Дэлгэрэнгүй</a></td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6">Захиалга байхгүй байна.</td>
+                    </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- /.container-fluid -->
+
+{% endblock %}

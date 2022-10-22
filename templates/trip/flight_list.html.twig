@@ -1,0 +1,114 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card-create-row-item div.dataTables_filter{
+            text-align: left!important;
+        }
+        .card-create-row-item div.dataTables_filter input{
+            width: 90%!important;
+        }
+        .card-create-row-item {
+            padding: 10px 0 5px 15px;
+        }
+        .card{
+            padding: 0;
+        }
+        .hotel-save-btn,.hotel-create-dropdown{
+            margin-left: 0.5em;
+        }
+        .dataTables_wrapper{
+            overflow: -webkit-paged-y;
+        }
+        .btn-primary {
+            color: #4e73df;
+            background-color: #fff;
+            border-color: #4e73df;
+        }
+        .form-control{
+            color: #4e73df;
+            background-color: #fff;
+            border-color: #4e73df;
+            height: 40px;
+            border-radius: .4rem;
+        }
+        #collapseCardExample{
+            padding: 10px;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+      <!-- DataTales Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Бүртгэлтэй нислэгийн жагсаалт</h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Улс</th>
+                  <th>Хот</th>
+                  <th>Чиглэл</th>
+                  <th>Явах огноо</th>
+                  <th>Ирэх огноо</th>
+                  <th>Шөнө</th>
+                  <th>Бүртгэсэн</th>
+                  <th>Засах</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>ID</th>
+                  <th>Улс</th>
+                  <th>Хот</th>
+                  <th>Чиглэл</th>
+                  <th>Явах огноо</th>
+                  <th>Ирэх огноо</th>
+                  <th>Шөнө</th>
+                  <th>Бүртгэсэн</th>
+                  <th>Засах</th>
+                </tr>
+              </tfoot>
+              <tbody id="flight_list">
+                {% if flightList is not null %}
+                    {% for item in flightList %}
+                        <tr>
+                            <td>{{ item.id }}</td>
+                            <td>{{ item.country_name }}</td>
+                            <td>{{item.city_name}}</td>
+                            <td>{{item.direction}}</td>
+                            <td>{{item.departure_datetime}}</td>
+                            <td>{{item.arrival_datetime}}</td>
+                            
+                            <td>{{item.night_count}}
+                                {% if item.night_count_plus is not null %}
+                                    [+{{item.night_count_plus}}]
+                                {% endif %}
+                            </td>
+                            <td>{{item.created_at}}</td>
+                            <td><a href={{path('edit_flight', {flight_id: item.id} )}}>Засах</a></td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="8">Бүртгэлтэй нислэг байхгүй байна.</td>
+                    </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- /.container-fluid -->
+
+{% endblock %}

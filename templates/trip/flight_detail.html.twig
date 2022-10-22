@@ -1,0 +1,231 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card{
+            padding: 0;
+        }
+        .btn-primary, .btn-secondary{
+            color: #fff!important;
+        }
+        .input-group-addon {
+            padding: 6px 12px;
+            font-size: 14px;
+            font-weight: normal;
+            line-height: 1;
+            text-align: center;
+            background-color: #eee;
+            border: 1px solid #ccc;
+            border-radius: 1px;
+        }
+
+        .input-group-addon:not(:first-child):not(:last-child), .input-group-btn:not(:first-child):not(:last-child), .input-group .form-control:not(:first-child):not(:last-child) {
+            border-radius: 1px;
+        }
+        @font-face {
+            font-family: 'Glyphicons Halflings';
+            src: url('/library/bootstrap_datetimepicker/fonts/glyphicons-halflings-regular.eot');
+            src: url('/library/bootstrap_datetimepicker/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('/library/bootstrap_datetimepicker/fonts/glyphicons-halflings-regular.woff') format('woff'), url('/library/bootstrap_datetimepicker/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('/library/bootstrap_datetimepicker/fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
+          }
+        .glyphicon {
+            position: relative;
+            top: 1px;
+            display: inline-block;
+            font-family: 'Glyphicons Halflings';
+            -webkit-font-smoothing: antialiased;
+            font-style: normal;
+            font-weight: normal;
+            line-height: 1;
+        }
+
+        .glyphicon-remove:before {
+            content: "\e014";
+        }
+
+        .glyphicon-th:before {
+            content: "\e011";
+        }
+        .form_datetime, .control-label{
+            padding-left: 0;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+
+<div class="container-fluid">
+     <div class="card shadow mb-4 col-sm-12 col-md-12 col-lg-8">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Бүртгэлтэй нислэгийн мэдээлэл</h6>
+        </div>
+        <div class="card-body">
+            <form>
+                {% if flightList is not null %}
+                    {% for item in flightList %}
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputCountry">Улс</label>
+                                <select id="inputCountry" class="form-control">
+                                    {% if countryList is not null %}
+                                        {% for country in countryList %}
+                                            {% if country.country_name == item.country_name %}
+                                                <option selected value="{{country.id}}" >{{country.country_name}}</option>
+                                            {% else %}
+                                                <option value="{{country.id}}" >{{country.country_name}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputCity">Хот</label>
+                                <select id="inputCity" class="form-control">
+                                    {% if cityList is not null %}
+                                        {% for city in cityList %}
+                                            {% if city.city_name == item.city_name %}
+                                                <option selected value="{{city.id}}" >{{city.city_name}}</option>
+                                            {% else %}
+                                                <option value="{{city.id}}" >{{city.city_name}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="direction">Чиглэл</label>
+                                <input type="text" class="form-control" id="direction" name="direction" value="{{item.direction}}">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="night_count">Шөнө</label>
+                                <input type="text" class="form-control" id="night_count" name="night_count" value="{{item.night_count}}">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="night_count_plus">Нэмэлт шөнө</label>
+                                <input type="text" class="form-control" id="night_count_plus" name="night_count_plus" value="{{item.night_count_plus}}">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                {#<label for="depature_datetime">Явах огноо</label>
+                                <input type="text" class="form-control" id="depature_datetime" name="departure_datetime" value="">#}
+                                <label for="departure_datetime" class="col-sm-12 col-md-10 col-lg-6 control-label">Явах огноо, цаг</label>
+                                <div data-link-field="departure_datetime" class="input-group date form_datetime col-sm-12 col-md-10 col-lg-11" data-date="1979-09-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p">
+                                    <input class="form-control" size="16" type="text" value="{{item.departure_datetime}}" readonly>
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                </div>
+                                <input type="hidden" id="departure_datetime" name="departure_datetime" value="{{item.departure_datetime}}" /><br/>
+                            </div>
+                            <div class="form-group col-md-6">
+                                {#<label for="arrival_datetime">Ирэх огноо</label>
+                                <input type="text" class="form-control" id="arrival_datetime" name="arrival_datetime" value="">#}
+                                <label for="arrival_datetime" class="col-sm-12 col-md-10 col-lg-6 control-label">Ирэх огноо, цаг</label>
+                                <div data-link-field="arrival_datetime" class="input-group date form_datetime col-sm-12 col-md-10 col-lg-11" data-date="1979-09-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p">
+                                    <input class="form-control" size="16" type="text" value="{{item.arrival_datetime}}" readonly>
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                </div>
+                                <input type="hidden" id="arrival_datetime" name="arrival_datetime" value="{{item.arrival_datetime}}" /><br/>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <a id="update_flight" class="btn btn-primary">Хадгалах</a>
+                    <a href={{ path('flight_info')}} id="update_cancel" class="btn btn-secondary">Буцах</a>
+                    
+                    <input type="hidden"  name="flight_id" id="flight_id" value="{{flight_id}}"/>
+                    <input type="hidden"  name="city_id" id="country_id" value="{{flightList[0].country_id}}"/>
+                    <input type="hidden"  name="city_id" id="city_id" value="{{flightList[0].city_id}}"/>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            
+            var date=new Date();
+            var val=date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+            $('.form_datetime').datetimepicker({
+                weekStart: 1,
+                todayBtn:  1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                forceParse: 0,
+                showMeridian: 1,
+                startDate: val+" 10:00",
+            });
+            
+            UIkit.util.on('#update_flight', 'click', function (e) {
+                e.preventDefault();
+                e.target.blur();
+                var param = {
+                        flight_id : $( "#flight_id" ).val(),
+                        country_id : $( "#country_id" ).val(),
+                        city_id : $( "#city_id" ).val(),
+                        departure_datetime : $('#departure_datetime').val(),
+                        arrival_datetime : $( "#arrival_datetime" ).val(),
+                        direction : $( "#direction" ).val(),
+                        night_count : $( "#night_count" ).val(),
+                        night_count_plus : $( "#night_count_plus" ).val(),
+                    };
+
+                    UIkit.modal.confirm('Хадгалахад итгэлтэй байна уу?').then(function () {
+                            
+                        sendAjaxRequest('{{ path('update_flight')}}', param, function(data, status, xhr){
+                             if(status === 'success'){
+                                 UIkit.modal.alert('Нислэгийн мэдээлэл амжилттай шинэчлэгдлээ. Бүртгэгдсэн ID No: ' + data.result);
+                             }else{
+                                 UIkit.modal.alert('Нислэгийн мэдээлэл шинэчлэхэд ямар нэгэн алдаа гарлаа! ' + status);
+                             }
+
+                         }, function(jqXhr, textStatus, errorMessage){
+                             UIkit.modal.alert('Нислэгийн мэдээлэл шинэчлэхэд ямар нэгэн алдаа гарлаа! Алдааны мессеж: ' + errorMessage);
+                         });
+
+                     }, function () {
+                         //console.log('Rejected.')
+                     });
+               
+                    
+            });
+            
+            $( "#inputCountry" ).change( function() {                
+                getCity($(this).val());
+                $("#country_id").val($(this).val());
+            });
+            
+            $( "#inputCity" ).change( function() {                      
+                $("#city_id").val($( "#inputCity option:selected" ).val());
+            });
+            
+        });
+          
+        function getCity(country_id){
+            sendAjaxRequest('{{path('get_city')}}', {country_id: country_id }, function(data, status, xhr){
+                if(status === 'success'){
+                    $('#inputCity option').remove();
+                    for (i = 0; i < $(data.cityNames).length; i++) {
+                        $('#inputCity').append( 
+                            $( '<option value="'+data.cityNames[i].id+'" >'+
+                            data.cityNames[i].city_name
+                            +'</option>' ) );
+                    }
+                    $("#city_id").val(data.cityNames[0].id);
+
+                }else{
+                    console.log('status: ' + status + ', data: ');
+                    console.log(data);
+                }
+            }, function(jqXhr, textStatus, errorMessage){
+                console.log('Error' + errorMessage);
+            });
+        }
+    </script>
+{% endblock %}

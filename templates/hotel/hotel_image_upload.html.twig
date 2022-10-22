@@ -1,0 +1,76 @@
+{% extends 'main/layout.html.twig' %}
+    
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        #image_list img{
+            width: 30%;
+            margin: 10px;
+        }
+        #image_list ul{
+            list-style: none;
+        }
+        #image_list ul li{
+            float: left;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    
+ <div class="container-fluid">
+
+      <!-- Page Heading -->
+      
+    <div class="card shadow mb-4 col-sm-12 col-md-12 col-lg-12" style="padding:0;">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Буудлын зураг</h6>
+        </div>
+        <div class="card-body">
+            <h3>Зураг хуулах: </h3>
+            {{ form_start(form) }}
+                {{ form_row(form.hotel_img) }}
+            {{ form_end(form) }}
+        </div>
+        
+    </div>
+    <div class="card shadow mb-4 col-sm-12 col-md-12 col-lg-12" style="padding:0;">
+        <div id="image_list">
+        </div>
+    </div>        
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            {% if hotel_id is not null %}
+                getHotelImage({{ hotel_id }});
+            {% endif %}
+        });
+        
+        function getHotelImage(hotel_id){
+            console.log('hotel ID: '+hotel_id);
+            
+            sendAjaxRequest('{{path('get_hotel_image')}}', {hotel_id : hotel_id} , function(data, status, xhr){
+                console.log(data);
+                
+                if(status === 'success'){
+                    
+                    {#$('#image_list ul').remove();#}
+                    for (i = 0; i < $(data.hotelPhoto).length; i++) {
+                        $('#image_list').append( $( '<span><img src="{{ asset("images/hotel/") }}'+data.hotelPhoto[i].hotel_img+'" /></span>' ) );
+                        
+                        {#$('#image_list ul').append( $( '<li>[ID '+data.hotelPhoto[i].id+'] <img data-u="image" src="{{ asset('images/hotel/')}}'+data.hotelPhoto[i].hotel_img+'" /></li>' ) );#}
+                                        
+                    }
+                }else{
+                    
+                }
+                
+            }, function(jqXhr, textStatus, errorMessage){
+
+            });
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,259 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card{
+            padding: 0;
+        }
+        .btn-primary, .btn-secondary{
+            color: #fff!important;
+        }
+        .form-control:disabled, .form-control[readonly] {
+            background-color: #ffffff;
+        }
+        .form-control{
+            color: #000;
+        }
+        .card-body img{
+            height: 200px;
+            margin: 10px;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+
+<div class="container-fluid">
+    <div class="card shadow mb-4 col-sm-12 col-md-12 col-lg-8">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Төлбөрийн мэдээлэл</h6>
+        </div>
+        <div class="card-body">
+            <form>
+                {% if orderDetail is not null %}
+                    {% for item in orderDetail %}
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputHotelName">Нэхэмжлэхийн дугаар</label>
+                                <input readonly type="text" class="form-control" value="{{item.invoice_num}}">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputHotelStar">Аяллын төрөл</label>
+                                <input readonly type="text" class="form-control" 
+                                       {% if item.is_special == '1'%}
+                                            value="Онцлох аялал"
+                                       {%else%}
+                                            value="Энгийн аялал"
+                                       {%endif%}
+                                       >
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputHotelName">Захиалгын төлөв</label>
+                                <input readonly type="text" class="form-control" value="{{item.order_status}}">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputHotelStar">Төлбөр хийгдсэн огноо, цаг</label>
+                                <input readonly type="text" class="form-control" value="{{item.updated_at}}">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputHotelName">Нийт төлбөр</label>
+                                <input readonly type="text" class="form-control" value="{{item.total_amount}}">
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <a href={{ path('get_order_list')}} class="btn btn-primary">Буцах</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="card shadow mb-4 col-sm-12 col-md-12 col-lg-8">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Захиалгын мэдээлэл</h6>
+        </div>
+        <div class="card-body">
+            <form>
+                {% if orderDetail is not null %}
+                    {% for item in orderDetail %}
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputHotelName">Овог, Нэр</label>
+                                <input readonly type="text" class="form-control" value="{{item.last_name}}, {{item.first_name}}">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputHotelStar">Имэйл</label>
+                                <input readonly type="text" class="form-control" value="{{item.email}}">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputHotelName">Аялахаар төлөвлөсөн улс</label>
+                                <input readonly type="text" class="form-control" value="{{item.country_name}}">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputHotelStar">Байршил</label>
+                                <input readonly type="text" class="form-control" value="{{item.city_name}}">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputHotelName">Зочид буудлын нэр</label>
+                                <input readonly type="text" class="form-control" value="{{item.hotel_name}}">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputHotelStar">Зэрэглэл</label>
+                                <input readonly type="text" class="form-control" value="{{item.hotel_star}}">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputHotelName">Том хүн</label>
+                                <input readonly type="text" class="form-control" value="{{item.adult_count}}">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputHotelStar">Хүүхэд</label>
+                                <input readonly type="text" class="form-control" value="
+                                       {%if item.children_count is not null and item.children_count > 0%}
+                                            {{item.children_count}} (Нас: {{item.children_age}})
+                                       {%else%}
+                                           0
+                                       {%endif%}
+                                       ">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputHotelName">Аяллын явах огноо</label>
+                                <input readonly type="text" class="form-control" value="{{item.departure_datetime}}">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputHotelStar">Ирэх огноо</label>
+                                <input readonly type="text" class="form-control" value="{{item.arrival_datetime}}">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputHotelName">Шөнө</label>
+                                <input readonly type="text" class="form-control" value="{{item.night_count}}">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputHotelStar">Нэмэлт шөнө</label>
+                                <input readonly type="text" class="form-control" value="
+                                        {%if item.night_count_plus is not null and item.night_count_plus > 0%}
+                                            {{item.night_count_plus}}
+                                       {%else%}
+                                           0
+                                       {%endif%}
+                                       ">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputHotelName">Маршрут</label>
+                                <input readonly type="text" class="form-control" value="{{item.direction}}">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputHotelStar">Аяллын даатгал</label>
+                                <input readonly type="text" class="form-control" value="{{item.insurance}}">
+                            </div>
+                        </div>
+                        {% set index=1 %}
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="dataTable">Өрөөний мэдээлэл</label>
+                            </div>
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                  <tr>
+                                    <th width="10%">#</th>
+                                    <th width="90%">Өрөөний төрөл</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {%if roomDetail is not null%}
+                                        {% for item in roomDetail %}
+                                          <tr>
+                                              <td>{{index}}</td>
+                                              <td>{{item.room_name}} өрөө
+                                                  {% if item.room_qty is not null%}
+                                                  {{item.room_qty}}ш
+                                                  {% endif %}
+                                              </td>
+                                          </tr>
+                                          {% set index = index + 1%}
+                                      {% endfor %}
+                                  {% else %}
+                                      <tr>
+                                          <td colspan="2">Өрөө байхгүй байна</td>
+                                      </tr>
+                                  {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endfor %}
+                    <a href={{ path('get_order_list')}} class="btn btn-primary">Буцах</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+{% if carInfo is not null %}
+    <div class="container-fluid">
+        <div class="card shadow mb-4 col-sm-12 col-md-12 col-lg-8">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Машин захиалгын мэдээлэл</h6>
+            </div>
+            <div class="card-body">
+                <form>
+
+                        {% for item in carInfo %}
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="inputHotelName">Маршрут</label>
+                                    <input readonly type="text" class="form-control" value="{{item.car_direction}}">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="inputHotelStar">Чиглэл</label>
+                                    <input readonly type="text" class="form-control" value="{{ item.way }} талдаа">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="inputHotelName">Том хүний төлбөр</label>
+                                    <input readonly type="text" class="form-control" value="{{item.adult_price}}">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="inputHotelStar">Хүүхдийн төлбөр</label>
+                                    <input readonly type="text" class="form-control" value="{{item.child_price}}">
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <a href={{ path('get_order_list')}} class="btn btn-primary">Буцах</a>
+
+                </form>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<div class="container-fluid">
+    <div class="card shadow mb-4 col-sm-12 col-md-12 col-lg-8">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Пасспортны зураг</h6>
+        </div>
+        <div class="card-body">
+            {% for item in passPhoto %}
+                <span>
+                    <a target="_blank" href="{{ asset("images/passport/") ~ item.passport_photo }}"><img src="{{ asset("images/passport/") ~ item.passport_photo }}" /></a>
+                </span>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

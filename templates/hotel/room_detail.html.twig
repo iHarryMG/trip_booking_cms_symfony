@@ -1,0 +1,211 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card{
+            padding: 0;
+        }
+        .btn-primary, .btn-secondary{
+            color: #fff!important;
+        }
+        .card-create-row-item div.dataTables_filter{
+            text-align: left!important;
+        }
+        .card-create-row-item div.dataTables_filter input{
+            {#width: 85%!important;#}
+        }
+        .card-create-row-item {
+            padding: 10px 0 5px 10px;
+        }
+        .dataTables_wrapper{
+            overflow: -webkit-paged-y;
+        }
+        .form-control{
+            color: #4e73df;
+            background-color: #fff;
+            border-color: #4e73df;
+            height: 40px;
+            border-radius: .4rem;
+        }
+        div.dataTables_wrapper div.dataTables_filter input {
+            margin-left: 0;
+            margin-right: 1em;
+            display: inline-block;
+            width: 100%;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+
+<div class="container-fluid">
+    <div class="card shadow mb-4 col-sm-12 col-md-9 col-lg-9">
+        <!-- Card Header - Accordion -->
+        <a href="#" class="d-block card-header py-3" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+            <h6 class="m-0 font-weight-bold text-primary">Өрөөний мэдээлэл засах</h6>
+        </a>
+
+        <div class="collapse show" id="collapseCardExample" style="">
+            <div class="table-responsive">
+                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                    <input type="hidden" id="trip_id" name="trip_id" value="">
+                    <div class="row">
+                        <div class="card-create-row-item col-sm-12 col-md-12 col-lg-12">
+                            <div class="btn-group trip-dropdown">
+                                <button id="select_trip" type="button" trip-id="{{trip.id}}" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                   [TripID: {{trip.id}}]
+                                   [{%if trip.is_special == 1%}Онцлох{%else%}Энгийн{%endif%}]
+                                   [{{trip.departure_datetime|date("Y.m.d")}} - {{trip.arrival_datetime|date("Y.m.d")}}]
+                                   [{{trip.country_name}}->{{trip.city_name}}]
+                                   [Буудал: {{trip.hotel_name}}]
+                                </button>
+                                <div class="dropdown-menu" id="dropdown-menu">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="card-create-row-item col-sm-12 col-md-12 col-lg-12">
+                            <div id="dataTable_filter" class="dataTables_filter">
+                                <!-- Example single danger button -->
+                                <div class="btn-group hotel-room-dropdown" >
+                                    <button type="button" id="select_room" room-id="{{room.room_name_id}}" class="room_type btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        {{room.room_name}}
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        {% if roomTypes is not null %}
+                                            {% for item in roomTypes %}
+                                                <a class="dropdown-item" room-id="{{item.id}}">{{item.room_name}}</a>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="card-create-row-item col-sm-12 col-md-6 col-lg-3">
+                            <div id="dataTable_filter" class="dataTables_filter">
+                                <input type="search" name="price_a" id="price_a" value="{{room.price_a}}" class="price_a form-control form-control-sm" placeholder="Үнэ А" aria-controls="dataTable">
+                            </div>
+                        </div>
+                        <div class="card-create-row-item col-sm-12 col-md-6 col-lg-3">
+                            <div id="dataTable_filter" class="dataTables_filter">
+                                <input type="search" name="price_bb" id="price_bb" value="{{room.price_bb}}" class="price_b form-control form-control-sm" placeholder="Үнэ Б" aria-controls="dataTable">
+                            </div>
+                        </div>
+                        <div class="card-create-row-item col-sm-12 col-md-6 col-lg-3">
+                            <div id="dataTable_filter" class="dataTables_filter">
+                                <input type="search" name="price_discounted" id="price_discounted" value="{{room.price_discounted}}" class="price_d form-control form-control-sm" placeholder="Хямдарсан үнэ А" aria-controls="dataTable">
+                            </div>
+                        </div>
+                        <div class="card-create-row-item col-sm-12 col-md-6 col-lg-3">
+                            <div id="dataTable_filter" class="dataTables_filter">
+                                <input type="search" name="price_discounted_bb" id="price_discounted_bb" value="{{room.price_discounted_bb}}" class="price_d form-control form-control-sm" placeholder="Хямдарсан үнэ ББ" aria-controls="dataTable">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-create-row-item col-sm-12 col-md-6 col-lg-4">
+                <div id="dataTable_filter" class="dataTables_filter">
+                    <a id="update_room" class="btn btn-primary">Хадгалах</a>
+                    <a href={{ path('room_info')}} id="update_cancel" class="btn btn-secondary">Буцах</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden"  name="room_price" id="room_price" value="{{room_price_id}}"/>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            
+//          Бүх аялал авчирах            
+            getTrip();
+            
+//          Өрөө сонгох            
+            $( ".hotel-room-dropdown a.dropdown-item" ).on( "click", function() {
+                $('#select_room').text($(this).text());
+                $('#select_room').attr('room-id', $(this).attr('room-id'));
+            });
+            
+            UIkit.util.on('#update_room', 'click', function (e) {
+                e.preventDefault();
+                e.target.blur();
+ 
+                var form_data = {
+                    room_price_id: $('#room_price').val(),
+                    trip_id: $('#select_trip').attr('trip-id'),
+                    room_id: $('#select_room').attr('room-id'),
+                    price_a: $('#price_a').val(),
+                    price_bb: $('#price_bb').val(),
+                    price_discounted: $('#price_discounted').val(),
+                    price_discounted_bb: $('#price_discounted_bb').val(),
+                };
+                console.log('room form_data:');
+                console.log(form_data);
+
+                UIkit.modal.confirm('Хадгалахад итгэлтэй байна уу?').then(function () { // Confirm - YES
+
+                    sendAjaxRequest('{{path('update_room')}}', form_data, function(data, status, xhr){
+                         if(status === 'success'){
+                             UIkit.modal.alert('Өрөөний мэдээлэл амжилттай шинэчлэгдлээ. Бүртгэгдсэн ID No: ' + data.result);
+                         }else{
+                             UIkit.modal.alert('Өрөөний мэдээлэл шинэчлэхэд ямар нэгэн алдаа гарлаа! ' + status);
+                         }
+
+                     }, function(jqXhr, textStatus, errorMessage){
+                         UIkit.modal.alert('Өрөөний мэдээлэл шинэчлэхэд ямар нэгэн алдаа гарлаа! Алдааны мессеж: ' + errorMessage);
+                     });
+
+                 }, function () { // Confirm - NO
+                     //console.log('Rejected.')
+                 });
+            });
+           
+        });
+        
+        function getTrip(){
+            sendAjaxRequest('{{path('get_trip_package')}}', {}, function(data, status, xhr){
+                if(status === 'success'){                         
+                    console.log("trip: ");
+                    console.log(data);
+                   $('.trip-dropdown .dropdown-menu a').remove();
+                   for (i = 0; i < $(data.tripList).length; i++) {
+
+                       var departDate = new Date(data.tripList[i].departure_datetime)
+                       var arrivalDate = new Date(data.tripList[i].arrival_datetime)
+                       var departure = departDate.getFullYear()+'.'+(parseInt(departDate.getMonth())+1)+'.'+departDate.getDate();
+                       var arrival = arrivalDate.getFullYear()+'.'+(parseInt(arrivalDate.getMonth())+1)+'.'+arrivalDate.getDate();
+
+                       $('.trip-dropdown .dropdown-menu').append( 
+                               $( '<a class="dropdown-item" trip-id="'+data.tripList[i].id+'" >'
+                                   +'[ TripID: '+data.tripList[i].id+' ] '
+                                   +'[ '+( data.tripList[i].is_special === '1' ? 'Онцлох' : 'Энгийн' )+' ] '
+                                   +'[ '+departure+' - '+arrival+' ] '
+                                   +'[ '+data.tripList[i].country_name+' -> '+data.tripList[i].city_name+' ]'
+                                   +'[ Буудал: '+data.tripList[i].hotel_name+' ]'
+                               +'</a>' ) );
+                   }
+//          Нислэг сонгох          
+                   $( ".trip-dropdown a.dropdown-item" ).on( "click", function() {
+                       $('#select_trip').text($(this).text());
+                       $('#select_trip').attr('trip-id', $(this).attr('trip-id'));
+                   });
+                }else{
+                    console.log("failed to get trip");
+                }
+            }, function(jqXhr, textStatus, errorMessage){
+                console.log("failed to get trip: " + errorMessage);
+            });
+        }
+        
+ 
+    </script>
+{% endblock %}

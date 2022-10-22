@@ -1,0 +1,177 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card-create-row-item div.dataTables_filter{
+            text-align: left!important;
+        }
+        .card-create-row-item div.dataTables_filter input{
+            width: 90%!important;
+        }
+        .card-create-row-item {
+            padding: 10px 0 5px 15px;
+        }
+        .card{
+            padding: 0;
+        }
+        .hotel-save-btn,.hotel-create-dropdown{
+            margin-left: 0.5em;
+        }
+        .dataTables_wrapper{
+            overflow: -webkit-paged-y;
+        }
+        .btn-primary, .btn-secondary{
+            color: #fff!important;
+        }
+        .form-control{
+            color: #4e73df;
+            background-color: #fff;
+            border-color: #4e73df;
+            height: 40px;
+            border-radius: .4rem;
+        }
+        #collapseCardExample{
+            padding: 10px;
+        }
+        .dataTables_filter{
+            padding: 10px 0 5px 15px;
+        }
+        .input-group-text::after {
+            display: inline-block;
+            margin-left: .255em;
+            vertical-align: .255em;
+            content: "";
+            border-top: .3em solid;
+            border-right: .3em solid transparent;
+            border-bottom: 0;
+            border-left: .3em solid transparent;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+      <!-- DataTales Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Бүртгэлтэй өрөөний жагсаалт</h6>
+        </div>
+        <div class="card-body">
+            <form action="{{path('room_info')}}" method="POST">
+                <div class="row">
+                    <div class="card-create-row-item col-sm-12 col-md-6 col-lg-3">
+                        <select name="hotel_name" id="hotel_name"  class="hotel_name_cb form-control" placeholder="Буудлын нэр">
+                            {% if hotelNames is not null %}
+                                {% if hotel_id is not null %}
+                                    {% if roomList is not null %}
+                                        <option value="{{roomList[0].id}}" selected="selected">{{roomList[0].hotel_name}}</option>
+                                    {% else %}
+                                        <option value="" selected="selected">Буудлын нэр</option>
+                                    {% endif %}
+                                {% else %}
+                                    <option value="" selected="selected">Буудлын нэр</option>
+                                {% endif %}
+                                
+                                {% for item in hotelNames %}
+                                    {% if item.id != hotel_id %}
+                                        <option value="{{item.id}}">{{item.hotel_name}}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <option value="">Буудал байхгүй</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div id="dataTable_filter" class="dataTables_filter">
+                        <button type="submit" id="search_room" class="btn btn-primary">Хайх</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Өрөөний төрөл</th>
+                  <th>Онцлох</th>
+                  <th>Буудал</th>
+                  <th>Зэрэглэл</th>
+                  <th>Үнэ А</th>
+                  <th>Үнэ 2Б</th>
+                  <th>Хямдралтай үнэ А</th>
+                  <th>Хямдралтай үнэ ББ</th>
+                  <th>Огноо</th>
+                  <th>Засах</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>ID</th>
+                  <th>Өрөөний төрөл</th>
+                  <th>Онцлох</th>
+                  <th>Буудал</th>
+                  <th>Зэрэглэл</th>
+                  <th>Үнэ А</th>
+                  <th>Үнэ 2Б</th>
+                  <th>Хямдралтай үнэ А</th>
+                  <th>Хямдралтай үнэ ББ</th>
+                  <th>Огноо</th>
+                  <th>Засах</th>
+                </tr>
+              </tfoot>
+              <tbody id="trip_list">
+                {% if roomList is not null %}
+                    {% for item in roomList %}
+                        <tr>
+                            <td>{{ item.id }}</td>
+                            <td>{{ item.room_name }}</td>
+                            <td>
+                                {% if item.is_special == '1' %}
+                                    Онцлох
+                                {% else %}
+                                    Энгийн
+                                {% endif %}
+                            </td>
+                            <td>{{item.hotel_name}}</td>
+                            <td>{{item.hotel_star}}</td>
+                            <td>{{item.price_a}}</td>
+                            <td>{{item.price_bb}}</td>
+                            <td>{{item.price_discounted}}</td>
+                            <td>{{item.price_discounted_bb}}</td>
+                            <td>{{item.created_at}}</td>
+                            <td><a href="{{ path('edit_room', {room_id: item.id, trip_id: item.trip_id}) }}">Засах</a></td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="11">Бүртгэлтэй өрөөний мэдээлэл байхгүй байна.</td>
+                    </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- /.container-fluid -->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            
+            $(".hotel_name_cb").combobox();
+
+        });
+
+            
+    </script>
+{% endblock %}

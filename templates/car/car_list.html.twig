@@ -1,0 +1,287 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card-create-row-item div.dataTables_filter{
+            text-align: left!important;
+        }
+        .card-create-row-item div.dataTables_filter input{
+            width: 90%!important;
+        }
+        .card-create-row-item {
+            padding: 10px 0 5px 15px;
+        }
+        .card{
+            padding: 0;
+        }
+        .car-save-btn{
+            margin-left: 0.5em;
+            color: #fff!important;
+        }
+        .dataTables_wrapper{
+            overflow: -webkit-paged-y;
+        }
+        .btn-primary {
+            color: #4e73df;
+            background-color: #fff;
+            border-color: #4e73df;
+        }
+        .form-control{
+            color: #4e73df;
+            background-color: #fff;
+            border-color: #4e73df;
+            height: 40px;
+            border-radius: .4rem;
+        }
+        #collapseCardExample{
+            padding: 10px;
+        }
+        .flight-dropdown, .car_direction{
+            margin-left: 0.5em;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+      <!-- Page Heading -->
+      
+        <form id="room_form">                                  
+            <div class="card shadow mb-4 col-sm-12 col-md-9 col-lg-9">
+                <!-- Card Header - Accordion -->
+                <a href="#" class="d-block card-header py-3" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                    <h6 class="m-0 font-weight-bold text-primary">Машин захиалга бүртгэх</h6>
+                </a>
+
+                <div class="collapse show" id="collapseCardExample" style="">
+                    <div class="table-responsive">
+                        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                            <div class="row">
+                                <div class="card-create-row-item col-sm-12 col-md-12 col-lg-12">
+                                    <div class="btn-group flight-dropdown">
+                                        <button id="select_flight" type="button" flight-id="" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            Нислэг сонгох
+                                        </button>
+                                        <div class="dropdown-menu" id="dropdown-menu">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="card-create-row-item col-sm-12 col-md-12 col-lg-12">
+                                    <div id="dataTable_filter" class="dataTables_filter">
+                                        <!-- Example single danger button -->
+                                        <div class="btn-group car-direction-dropdown" >
+                                            <button type="button" id="car_direction" car-direction="" class="car_direction btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                Маршрут сонгох
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" car-direction="УБ - УланУдэ">УБ - УланУдэ</a>
+                                                <a class="dropdown-item" car-direction="УБ - Эрхүү">УБ - Эрхүү</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="card-create-row-item col-sm-12 col-md-6 col-lg-3">
+                                    <div id="dataTable_filter" class="dataTables_filter">
+                                        <input type="search" name="adult_price_oneway" id="adult_price_oneway" class="price_a form-control form-control-sm" placeholder="1 тал үнэ (Том хүн)" aria-controls="dataTable">
+                                    </div>
+                                </div>
+                                <div class="card-create-row-item col-sm-12 col-md-6 col-lg-3">
+                                    <div id="dataTable_filter" class="dataTables_filter">
+                                        <input type="search" name="child_price_oneway" id="child_price_oneway" class="price_b form-control form-control-sm" placeholder="1 тал үнэ (Хүүхэд)" aria-controls="dataTable">
+                                    </div>
+                                </div>
+                                <div class="card-create-row-item col-sm-12 col-md-6 col-lg-3">
+                                    <div id="dataTable_filter" class="dataTables_filter">
+                                        <input type="search" name="adult_price_twoway" id="adult_price_twoway" class="price_d form-control form-control-sm" placeholder="2 тал үнэ (Том хүн)" aria-controls="dataTable">
+                                    </div>
+                                </div>
+                                <div class="card-create-row-item col-sm-12 col-md-6 col-lg-3">
+                                    <div id="dataTable_filter" class="dataTables_filter">
+                                        <input type="search" name="child_price_twoway" id="child_price_twoway" class="price_d form-control form-control-sm" placeholder="2 тал (Хүүхэд)" aria-controls="dataTable">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-create-row-item col-sm-12 col-md-6 col-lg-4">
+                        <div id="dataTable_filter" class="dataTables_filter">
+                            <a id="save_car" class="car-save-btn btn btn-success btn-icon-split">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-check"></i>
+                                </span>
+                                <span class="text">Машин захиалга нэмэх</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+      
+      
+      <!-- DataTales Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Бүртгэлтэй машины жагсаалт</h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Нислэгийн маршрут</th>
+                  <th>Машины маршрут</th>
+                  <th>Чиглэл</th>
+                  <th>Том хүний үнэ</th>
+                  <th>Хүүхдийн үнэ</th>
+                  <th>Огноо</th>
+                </tr>
+              </thead>
+              <tbody id="car_list">
+               
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- /.container-fluid -->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function(){
+                
+           getFlights();
+           getCarList();
+           
+           $( ".car-direction-dropdown a.dropdown-item" ).on( "click", function() {
+                    $('#car_direction').text($(this).text());
+                    $('#car_direction').attr('car-direction', $(this).attr('car-direction'));
+                });
+                
+            UIkit.util.on('#save_car', 'click', function (e) {
+                e.preventDefault();
+                e.target.blur();
+ 
+                var form_data = {
+                    flight_id: $('#select_flight').attr('flight-id'),
+                    car_direction: $('#car_direction').attr('car-direction'),
+                    adult_price_oneway: $('#adult_price_oneway').val(),
+                    child_price_oneway: $('#child_price_oneway').val(),
+                    adult_price_twoway: $('#adult_price_twoway').val(),
+                    child_price_twoway: $('#child_price_twoway').val(),
+                };
+                console.log('car form_data:');
+                console.log(form_data);
+
+                UIkit.modal.confirm('Хадгалахад итгэлтэй байна уу?').then(function () { // Confirm - YES
+
+                    sendAjaxRequest('{{path('register_car')}}', form_data, function(data, status, xhr){
+                         if(status === 'success'){
+                            getCarList();
+                            UIkit.modal.alert('Машин захиалгын мэдээлэл амжилттай бүртгэгдлээ. Бүртгэгдсэн ID No: ' + data.result);
+                         }else{
+                            UIkit.modal.alert('Машин захиалгын мэдээлэл бүртгэхэд ямар нэгэн алдаа гарлаа! ' + status);
+                         }
+
+                     }, function(jqXhr, textStatus, errorMessage){
+                        UIkit.modal.alert('Машин захиалгын мэдээлэл бүртгэхэд ямар нэгэн алдаа гарлаа! Алдааны мессеж: ' + errorMessage);
+                     });
+
+                 }, function () { // Confirm - NO
+                     //console.log('Rejected.')
+                 });
+            });
+            
+            
+        });
+        
+        function getCarList(){
+            sendAjaxRequest('{{path('get_car_list')}}', {} , function(data, status, xhr){
+                
+                if(status === 'success'){
+                    $('#car_list tr').remove();
+                    for (i = 0; i < $(data.carPriceList).length; i++) {
+                        $('#car_list').append( 
+                            $( '<tr>'
+                                +'<td>'+data.carPriceList[i].car_info_id+'</td>'
+                                +'<td>['+data.carPriceList[i].flight_direction+']-['+data.carPriceList[i].departure_datetime+' - '+data.carPriceList[i].arrival_datetime+']</td>'
+                                +'<td>'+data.carPriceList[i].car_direction+'</td>'
+                                +'<td>'+data.carPriceList[i].way+' тал</td>'
+                                +'<td>'+data.carPriceList[i].adult_price+'</td>'
+                                +'<td>'+data.carPriceList[i].child_price+'</td>'
+                                +'<td>'+data.carPriceList[i].created_at+'</td>'
+                              +'</tr>'
+                            )
+                        );
+                    }
+                }else{
+                    $('#car_list tr').remove();
+                    $('#car_list').append( 
+                        $( '<tr>'
+                                +'<td colspan="6">Машины жагсаалт хоосон байна.</td>'
+                              +'</tr>'
+                            )    
+                        );
+                }
+                
+            }, function(jqXhr, textStatus, errorMessage){
+                $('#car_list tr').remove();
+                $('#car_list').append( 
+                        $( '<tr>'
+                            +'<td colspan="6">Машины жагсаалтыг авчирах боломжгүй байна.</td>'
+                          +'</tr>'
+                        )    
+                    );
+            });
+        }
+        
+        function getFlights(){
+            sendAjaxRequest('{{path('get_flight')}}', {}, function(data, status, xhr){
+                if(status === 'success'){                         
+                    console.log("flight: ");
+                    console.log(data);
+                   $('.flight-dropdown .dropdown-menu a').remove();
+                   
+                   for (i = 0; i < $(data.flightList).length; i++) {
+
+                       var departDate = new Date(data.flightList[i].departure_datetime)
+                       var arrivalDate = new Date(data.flightList[i].arrival_datetime)
+                       var departure = departDate.getFullYear()+'.'+(parseInt(departDate.getMonth())+1)+'.'+departDate.getDate();
+                       var arrival = arrivalDate.getFullYear()+'.'+(parseInt(arrivalDate.getMonth())+1)+'.'+arrivalDate.getDate();
+
+                       $('.flight-dropdown .dropdown-menu').append( 
+                               $( '<a class="dropdown-item" flight-id="'+data.flightList[i].id+'" >'
+                                   +'[ FlightID: '+data.flightList[i].id+' ] '
+                                   +'[ Хуваарь: '+departure+' - '+arrival+' ] '
+                                   +'[ Чиглэл: '+data.flightList[i].country_name+' -> '+data.flightList[i].city_name+' ]'
+                               +'</a>' ) );
+                   }
+                   
+//          Нислэг сонгох          
+                   $( ".flight-dropdown a.dropdown-item" ).on( "click", function() {
+                       $('#select_flight').text($(this).text());
+                       $('#select_flight').attr('flight-id', $(this).attr('flight-id'));
+                   });
+                }else{
+                    console.log("failed to get flight");
+                }
+            }, function(jqXhr, textStatus, errorMessage){
+                console.log("failed to get flight: " + errorMessage);
+            });
+        }
+    </script>
+{% endblock %}

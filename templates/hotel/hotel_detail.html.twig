@@ -1,0 +1,144 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card{
+            padding: 0;
+        }
+        .btn-primary, .btn-secondary{
+            color: #fff!important;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+
+<div class="container-fluid">
+     <div class="card shadow mb-4 col-sm-12 col-md-12 col-lg-8">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Бүртгэлтэй буудлын мэдээлэл</h6>
+        </div>
+        <div class="card-body">
+            <form>
+                {% if hotelList is not null %}
+                    {% for item in hotelList %}
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputCountry">Улс</label>
+                                <select id="inputCountry" class="form-control">
+                                    {% if countryList is not null %}
+                                        {% for country in countryList %}
+                                            {% if country.country_name == item.country_name %}
+                                                <option selected value="{{country.id}}" >{{country.country_name}}</option>
+                                            {% else %}
+                                                <option value="{{country.id}}" >{{country.country_name}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputCity">Хот</label>
+                                <select id="inputCity" class="form-control">
+                                    {% if cityList is not null %}
+                                        {% for city in cityList %}
+                                            {% if city.city_name == item.city_name %}
+                                                <option selected value="{{city.id}}" >{{city.city_name}}</option>
+                                            {% else %}
+                                                <option value="{{city.id}}" >{{city.city_name}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputHotelName">Буудлын нэр</label>
+                                <input type="text" class="form-control" id="inputHotelName" name="hotel_name" value="{{item.hotel_name}}">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputHotelStar">Буудлын од</label>
+                                <input type="text" class="form-control" id="inputHotelStar" name="hotel_star" value="{{item.hotel_star}}">
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <a id="update_hotel" class="btn btn-primary">Хадгалах</a>
+                    <a href={{ path('hotel')}} id="update_cancel" class="btn btn-secondary">Буцах</a>
+                    
+                    <input type="hidden"  name="hotel_id" id="hotel_id" value="{{hotel_id}}"/>
+                    <input type="hidden"  name="city_id" id="city_id" value="{{hotelList[0].city_id}}"/>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            
+            UIkit.util.on('#update_hotel', 'click', function (e) {
+                e.preventDefault();
+                e.target.blur();
+                var param = {
+                        hotel_id : $( "#hotel_id" ).val(),
+                        city_id : $( "#city_id" ).val(),
+                        hotel_name : $('#inputHotelName').val(),
+                        hotel_star : $( "#inputHotelStar" ).val(),
+                    };
+
+                    UIkit.modal.confirm('Хадгалахад итгэлтэй байна уу?').then(function () {
+                            
+                        sendAjaxRequest('{{ path('update_hotel')}}', param, function(data, status, xhr){
+                             if(status === 'success'){
+                                 UIkit.modal.alert('Буудлын мэдээлэл амжилттай шинэчлэгдлээ. Бүртгэгдсэн ID No: ' + data.result);
+                             }else{
+                                 UIkit.modal.alert('Буудлын мэдээлэл шинэчлэхэд ямар нэгэн алдаа гарлаа! ' + status);
+                             }
+
+                         }, function(jqXhr, textStatus, errorMessage){
+                             UIkit.modal.alert('Буудлын мэдээлэл шинэчлэхэд ямар нэгэн алдаа гарлаа! Алдааны мессеж: ' + errorMessage);
+                         });
+
+                     }, function () {
+                         //console.log('Rejected.')
+                     });
+               
+                    
+            });
+            
+            $( "#inputCountry" ).change( function() {                
+                getCity($(this).val());
+            });
+            
+            $( "#inputCity" ).change( function() {                      
+                $("#city_id").val($( "#inputCity option:selected" ).val());
+            });
+            
+        });
+          
+        function getCity(country_id){
+            sendAjaxRequest('{{path('get_city')}}', {country_id: country_id }, function(data, status, xhr){
+                if(status === 'success'){
+                    $('#inputCity option').remove();
+                    for (i = 0; i < $(data.cityNames).length; i++) {
+                        $('#inputCity').append( 
+                            $( '<option value="'+data.cityNames[i].id+'" >'+
+                            data.cityNames[i].city_name
+                            +'</option>' ) );
+                    }
+                    $("#city_id").val(data.cityNames[0].id);
+
+                }else{
+                    console.log('status: ' + status + ', data: ');
+                    console.log(data);
+                }
+            }, function(jqXhr, textStatus, errorMessage){
+                console.log('Error' + errorMessage);
+            });
+        }
+    </script>
+{% endblock %}

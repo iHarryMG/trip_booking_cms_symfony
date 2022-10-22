@@ -1,0 +1,608 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card-create-row-item div.dataTables_filter{
+            text-align: left!important;
+        }
+        .card-create-row-item div.dataTables_filter input{
+            {#width: 85%!important;#}
+        }
+        .card-create-row-item {
+            padding: 10px 0 5px 10px;
+        }
+        .card{
+            padding: 0;
+        }
+        .hotel-save-btn,.hotel-create-dropdown{
+            {#margin-left: 1em;
+            margin-right: 0.5em;#}
+        }
+        .dataTables_wrapper{
+            overflow: -webkit-paged-y;
+        }
+        
+        .input-group-addon {
+            padding: 6px 12px;
+            font-size: 14px;
+            font-weight: normal;
+            line-height: 1;
+            text-align: center;
+            background-color: #eee;
+            border: 1px solid #ccc;
+            border-radius: 1px;
+        }
+
+        .input-group-addon:not(:first-child):not(:last-child), .input-group-btn:not(:first-child):not(:last-child), .input-group .form-control:not(:first-child):not(:last-child) {
+            border-radius: 1px;
+        }
+
+        @font-face {
+            font-family: 'Glyphicons Halflings';
+            src: url('/library/bootstrap_datetimepicker/fonts/glyphicons-halflings-regular.eot');
+            src: url('/library/bootstrap_datetimepicker/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('/library/bootstrap_datetimepicker/fonts/glyphicons-halflings-regular.woff') format('woff'), url('/library/bootstrap_datetimepicker/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('/library/bootstrap_datetimepicker/fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
+          }
+        .glyphicon {
+            position: relative;
+            top: 1px;
+            display: inline-block;
+            font-family: 'Glyphicons Halflings';
+            -webkit-font-smoothing: antialiased;
+            font-style: normal;
+            font-weight: normal;
+            line-height: 1;
+        }
+
+        .glyphicon-remove:before {
+            content: "\e014";
+        }
+
+        .glyphicon-th:before {
+            content: "\e011";
+        }
+        .form-group {
+            margin-bottom: 0;
+            padding: 10px 0 5px 10px;
+        }
+        .card-create-row-item button{
+{#            width: 250px;#}
+        }
+        .btn-primary {
+            color: #4e73df;
+            background-color: #fff;
+            border-color: #4e73df;
+        }
+        .form-control{
+            color: #4e73df;
+            background-color: #fff;
+            border-color: #4e73df;
+            height: 40px;
+            border-radius: .4rem;
+        }
+        div.dataTables_wrapper div.dataTables_filter input {
+            margin-left: 0;
+            margin-right: 1em;
+            display: inline-block;
+            width: 100%;
+        }
+        #save_hotel{
+            margin-top: 30px;
+        }
+        #collapseCardExample{
+            padding: 10px;
+        }
+        .form_datetime, .control-label{
+            padding-left: 0;
+        }
+        .btn-success{
+            color: #fff!important;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+            <form id="flight_form">
+                <div class="card shadow mb-4 col-sm-12 col-md-9 col-lg-9">
+                    <!-- Card Header - Accordion -->
+                    <a href="#" class="d-block card-header py-3" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                        <h6 class="m-0 font-weight-bold text-primary">Нислэгийн хуваарь оруулах</h6>
+                    </a>
+                    <!-- Card Content - Collapse -->
+                    <div class="collapse show" id="collapseCardExample" style="">
+                        <div class="table-responsive">
+                            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                                <div class="row">
+                                    <div class="card-create-row-item col-sm-12 col-md-10 col-lg-6">
+                                        <div id="dataTable_filter" class="dataTables_filter">
+                                            <!-- Example single danger button -->
+                                            <div class="btn-group country-dropdown">
+                                                <button id="select_country" type="button" country-id="4" value="" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                    Улс сонгох
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    {% if countryNames is not null %}
+                                                        {% for item in countryNames %}
+                                                            <a class="dropdown-item" country-id="{{item.id}}">{{item.country_name}}</a>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-create-row-item col-sm-12 col-md-10 col-lg-6">
+                                        <div class="btn-group city-dropdown">
+                                            <button id="select_city" type="button" city-id="" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                Хот сонгох
+                                            </button>
+                                            <div class="dropdown-menu">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12 col-md-10 col-lg-6">
+                                        <label for="dtp_input1" class="col-sm-12 col-md-10 col-lg-6 control-label">Явах огноо, цаг</label>
+                                        <div class="input-group date form_datetime col-sm-12 col-md-10 col-lg-11" data-date="1979-09-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
+                                            <input class="form-control" size="16" type="text" value="" readonly>
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                        </div>
+                                        <input type="hidden" id="dtp_input1" name="departure_datetime" value="" /><br/>
+                                    </div>
+                                    <div class="form-group col-sm-12 col-md-10 col-lg-6">
+                                        <label for="dtp_input2" class="col-sm-12 col-md-10 col-lg-6 control-label">Ирэх огноо, цаг</label>
+                                        <div class="input-group date form_datetime col-sm-12 col-md-10 col-lg-11" data-date="1979-09-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input2">
+                                            <input class="form-control" size="16" type="text" value="" readonly>
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                        </div>
+                                        <input type="hidden" id="dtp_input2" name="arrival_datetime" value="" /><br/>
+                                    </div>
+                                    <div class="card-create-row-item col-sm-12 col-md-6 col-lg-6">
+                                        <div id="dataTable_filter" class="dataTables_filter">
+                                            <input type="search" id="direction" name="direction" class="form-control form-control-sm" placeholder="Нислэг" aria-controls="dataTable">
+                                        </div>
+                                    </div>
+                                    <div class="card-create-row-item col-sm-12 col-md-3 col-lg-3">
+                                        <div id="dataTable_filter" class="dataTables_filter">
+                                            <input type="search" id="night_count" name="night_count" class="form-control form-control-sm" placeholder="Шөнийн тоо" aria-controls="dataTable">
+                                        </div>
+                                    </div>
+                                    <div class="card-create-row-item col-sm-12 col-md-3 col-lg-3">
+                                        <div id="dataTable_filter" class="dataTables_filter">
+                                            <input type="search" id="night_count_plus" name="night_count_plus" class="form-control form-control-sm" placeholder="Нэмэлт шөнө" aria-controls="dataTable">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-create-row-item col-sm-12 col-md-6 col-lg-4">
+                            <div id="dataTable_filter" class="dataTables_filter">
+                                <a id="save_flight" class="hotel-save-btn btn btn-success btn-icon-split">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+                                    <span class="text">Нислэг хадгалах</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <form id="trip_form">
+                <div class="card shadow mb-4 col-sm-12 col-md-9 col-lg-9">
+                    <!-- Card Header - Accordion -->
+                    <a href="#" class="d-block card-header py-3" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                        <h6 class="m-0 font-weight-bold text-primary">Аяллын багцын мэдээлэл оруулах</h6>
+                    </a>
+                    <!-- Card Content - Collapse -->
+                    <div class="collapse show" id="collapseCardExample" style="">
+                        <div class="table-responsive">
+                            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                                <div class="row">
+                                    <div class="card-create-row-item col-sm-12 col-md-12 col-lg-12">
+                                        <div class="btn-group flight-dropdown">
+                                            <button id="select_flight" type="button" flight-id="" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                Нислэг сонгох
+                                            </button>
+                                            <div class="dropdown-menu" id="dropdown-menu">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <input type="hidden" id="flight_id" name="flight_id" value="" /><br/>
+                                    <div class="card-create-row-item col-sm-12 col-md-10 col-lg-6">
+                                        <div id="dataTable_filter" class="dataTables_filter">
+                                            <!-- Example single danger button -->
+                                            <div class="btn-group hotel-list-dropdown">
+                                                <button id="select_hotel" hotel-id="" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                    Буудал сонгох
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    {% if hotelNames is not null %}
+                                                        {% for item in hotelNames %}
+                                                            <a class="dropdown-item" hotel-id="{{item.id}}">{{item.hotel_name}}</a>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-create-row-item col-sm-12 col-md-10 col-lg-6">
+                                        <div id="dataTable_filter" class="dataTables_filter">
+                                            <input type="search" id="meal" name="meal" value="" class="form-control form-control-sm" placeholder="Хоол" aria-controls="dataTable">
+                                        </div>
+                                    </div>
+                                    <div class="card-create-row-item col-sm-12 col-md-10 col-lg-6">
+                                        <div id="dataTable_filter" class="dataTables_filter">
+                                            <input type="search" id="insurance" name="insurance" value="" class="form-control form-control-sm" placeholder="Даатгал" aria-controls="dataTable">
+                                        </div>
+                                    </div>
+                                    <div class="card-create-row-item col-sm-12 col-md-10 col-lg-6">
+                                        <div id="dataTable_filter" class="dataTables_filter">
+                                            <input type="search" id="welcome_service" name="welcome_service" value="" class="form-control form-control-sm" placeholder="Угтах үйлчилгээ" aria-controls="dataTable">
+                                        </div>
+                                    </div>
+
+                                    <div class="card-create-row-item col-sm-12 col-md-4 col-lg-4" style="margin: 15px;">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" name="is_special" id="customCheck1">
+                                            <label class="custom-control-label" for="customCheck1">Хямдралтай онцлох аялал</label>
+                                        </div>
+                                    </div>                
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-create-row-item col-sm-12 col-md-6 col-lg-4">
+                            <div id="dataTable_filter" class="dataTables_filter">
+                                <a id="save_trip" class="hotel-save-btn btn btn-success btn-icon-split">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+                                    <span class="text">Мэдээлэл хадгалах</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>   
+            </form>
+            <form id="room_form">                                  
+                <div class="card shadow mb-4 col-sm-12 col-md-9 col-lg-9">
+                    <!-- Card Header - Accordion -->
+                    <a href="#" class="d-block card-header py-3" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                        <h6 class="m-0 font-weight-bold text-primary">Өрөөний мэдээлэл оруулах</h6>
+                    </a>
+
+                    <div class="collapse show" id="collapseCardExample" style="">
+                        <div class="table-responsive">
+                            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                                <input type="hidden" id="trip_id" name="trip_id" value="">
+                                <div class="row">
+                                    <div class="card-create-row-item col-sm-12 col-md-12 col-lg-12">
+                                        <div class="btn-group trip-dropdown">
+                                            <button id="select_trip" type="button" trip-id="" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                Аялал сонгох
+                                            </button>
+                                            <div class="dropdown-menu" id="dropdown-menu">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="card-create-row-item col-sm-12 col-md-12 col-lg-12">
+                                        <div id="dataTable_filter" class="dataTables_filter">
+                                            <!-- Example single danger button -->
+                                            <div class="btn-group hotel-room-dropdown" >
+                                                <button type="button" id="select_room" room-id="" class="room_type btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                    Өрөөний төрөл
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    {% if roomNames is not null %}
+                                                        {% for item in roomNames %}
+                                                            <a class="dropdown-item" room-id="{{item.id}}">{{item.room_name}}</a>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="card-create-row-item col-sm-12 col-md-6 col-lg-3">
+                                        <div id="dataTable_filter" class="dataTables_filter">
+                                            <input type="search" name="price_a" id="price_a" class="price_a form-control form-control-sm" placeholder="Үнэ А" aria-controls="dataTable">
+                                        </div>
+                                    </div>
+                                    <div class="card-create-row-item col-sm-12 col-md-6 col-lg-3">
+                                        <div id="dataTable_filter" class="dataTables_filter">
+                                            <input type="search" name="price_bb" id="price_bb" class="price_b form-control form-control-sm" placeholder="Үнэ Б" aria-controls="dataTable">
+                                        </div>
+                                    </div>
+                                    <div class="card-create-row-item col-sm-12 col-md-6 col-lg-3">
+                                        <div id="dataTable_filter" class="dataTables_filter">
+                                            <input type="search" name="price_discounted" id="price_discounted" class="price_d form-control form-control-sm" placeholder="Хямдарсан үнэ А" aria-controls="dataTable">
+                                        </div>
+                                    </div>
+                                    <div class="card-create-row-item col-sm-12 col-md-6 col-lg-3">
+                                        <div id="dataTable_filter" class="dataTables_filter">
+                                            <input type="search" name="price_discounted_bb" id="price_discounted_bb" class="price_d form-control form-control-sm" placeholder="Хямдарсан үнэ ББ" aria-controls="dataTable">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-create-row-item col-sm-12 col-md-6 col-lg-4">
+                            <div id="dataTable_filter" class="dataTables_filter">
+                                <a id="add_room" class="hotel-save-btn btn btn-success btn-icon-split">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+                                    <span class="text">Өрөө нэмэх</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        var date=new Date();
+        var val=date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+        $('.form_datetime').datetimepicker({
+                weekStart: 1,
+                todayBtn:  1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                forceParse: 0,
+                showMeridian: 1,
+                startDate: val+" 10:00",
+            });
+            
+        $(document).ready(function(){
+//          Бүх нислэг авчирах
+            getFlights(); 
+//          Бүх аялал авчирах            
+            getTrip();
+            
+//          Буудал сонгох
+            $( ".hotel-list-dropdown a.dropdown-item" ).on( "click", function() {
+                $('#select_hotel').text($(this).text());
+                $('#select_hotel').attr('hotel-id', $(this).attr('hotel-id'));
+            });
+//          Өрөө сонгох            
+            $( ".hotel-room-dropdown a.dropdown-item" ).on( "click", function() {
+                $('#select_room').text($(this).text());
+                $('#select_room').attr('room-id', $(this).attr('room-id'));
+            });
+//          Улс сонгох                        
+            $( ".country-dropdown a.dropdown-item" ).on( "click", function() {
+                $('#select_country').text($(this).text());
+                $('#select_country').attr('country-id', $(this).attr('country-id'));
+                $('#select_city').text('Хот сонгох');
+                
+                sendAjaxRequest('{{path('get_city')}}', {country_id: $(this).attr('country-id')}, function(data, status, xhr){
+                    if(status === 'success'){
+                            
+                            $('.city-dropdown .dropdown-menu a').remove();
+                            for (i = 0; i < $(data.cityNames).length; i++) {
+                                $('.city-dropdown .dropdown-menu').append( 
+                                        $( '<a class="dropdown-item" city-id="'+data.cityNames[i].id+'" >'+
+                                        data.cityNames[i].city_name
+                                        +'</a>' ) );
+                            }
+//          Хот сонгох          
+                            $( ".city-dropdown a.dropdown-item" ).on( "click", function() {
+                                $('#select_city').text($(this).text());
+                                $('#select_city').attr('city-id', $(this).attr('city-id'));
+                            });
+                            
+                        }else{
+                            console.log('status: ' + status + ', data: ');
+                            console.log(data);
+                        }
+                }, function(jqXhr, textStatus, errorMessage){
+                    console.log('Error' + errorMessage);
+                });
+            });
+            
+           
+            UIkit.util.on('#save_flight', 'click', function (e) {
+                e.preventDefault();
+                e.target.blur();
+
+                var form_data = {
+                    country_id: $('#select_country').attr('country-id'),
+                    city_id: $('#select_city').attr('city-id'),
+                    departure_datetime: $('#dtp_input1').val(),
+                    arrival_datetime: $('#dtp_input2').val(),
+                    direction: $('#direction').val(),
+                    night_count: $('#night_count').val(),
+                    night_count_plus: $('#night_count_plus').val(),
+                };
+                console.log('flight form_data:');
+                console.log(form_data);
+
+                UIkit.modal.confirm('Хадгалахад итгэлтэй байна уу?').then(function () { // Confirm - YES
+
+                    sendAjaxRequest('{{path('register_flight')}}', form_data, function(data, status, xhr){
+                         if(status === 'success'){
+                             $('#flight_id').val(data.result);
+                             getFlights();
+                             UIkit.modal.alert('Нислэгийн хуваарь амжилттай бүртгэгдлээ. Бүртгэгдсэн ID No: ' + data.result);
+                         }else{
+                             UIkit.modal.alert('Нислэгийн хуваарь бүртгэхэд ямар нэгэн алдаа гарлаа! ' + status);
+                         }
+                     }, function(jqXhr, textStatus, errorMessage){
+                         UIkit.modal.alert('Нислэгийн хуваарь бүртгэхэд ямар нэгэн алдаа гарлаа! Алдааны мессеж: ' + errorMessage);
+                     });
+
+                 }, function () { // Confirm - NO
+                     //console.log('Rejected.')
+                 });
+            });           
+            
+            UIkit.util.on('#save_trip', 'click', function (e) {
+                e.preventDefault();
+                e.target.blur();
+ 
+                var form_data = {
+                    flight_id: $('#select_flight').attr('flight-id'),
+                    hotel_id: $('#select_hotel').attr('hotel-id'),
+                    meal: $('#meal').val(),
+                    insurance: $('#insurance').val(),
+                    welcome_service: $('#welcome_service').val(),
+                    is_special: $('input#customCheck1[type="checkbox"]').prop("checked") === true ? 1 : 0,
+                };
+                console.log('trip form_data:');
+                console.log(form_data);
+
+                UIkit.modal.confirm('Хадгалахад итгэлтэй байна уу?').then(function () { // Confirm - YES
+
+                    sendAjaxRequest('{{path('register_trip_service')}}', form_data, function(data, status, xhr){
+                         if(status === 'success'){
+                             $('#trip_id').val(data.result);
+                             getTrip();
+                             UIkit.modal.alert('Аяллын мэдээлэл амжилттай бүртгэгдлээ. Бүртгэгдсэн ID No: ' + data.result);
+                         }else{
+                             UIkit.modal.alert('Аяллын мэдээлэл бүртгэхэд ямар нэгэн алдаа гарлаа! ' + status);
+                         }
+
+                     }, function(jqXhr, textStatus, errorMessage){
+                         UIkit.modal.alert('Аяллын мэдээлэл бүртгэхэд ямар нэгэн алдаа гарлаа! Алдааны мессеж: ' + errorMessage);
+                     });
+
+                 }, function () { // Confirm - NO
+                     //console.log('Rejected.')
+                 });
+            });
+            
+            UIkit.util.on('#add_room', 'click', function (e) {
+                e.preventDefault();
+                e.target.blur();
+ 
+                var form_data = {
+                    trip_id: $('#select_trip').attr('trip-id'),
+                    room_id: $('#select_room').attr('room-id'),
+                    price_a: $('#price_a').val(),
+                    price_bb: $('#price_bb').val(),
+                    price_discounted: $('#price_discounted').val(),
+                    price_discounted_bb: $('#price_discounted_bb').val(),
+                };
+                console.log('room form_data:');
+                console.log(form_data);
+
+                UIkit.modal.confirm('Хадгалахад итгэлтэй байна уу?').then(function () { // Confirm - YES
+
+                    sendAjaxRequest('{{path('register_room')}}', form_data, function(data, status, xhr){
+                         if(status === 'success'){
+                             UIkit.modal.alert('Өрөөний мэдээлэл амжилттай бүртгэгдлээ. Бүртгэгдсэн ID No: ' + data.result);
+                         }else{
+                             UIkit.modal.alert('Өрөөний мэдээлэл бүртгэхэд ямар нэгэн алдаа гарлаа! ' + status);
+                         }
+
+                     }, function(jqXhr, textStatus, errorMessage){
+                         UIkit.modal.alert('Өрөөний мэдээлэл бүртгэхэд ямар нэгэн алдаа гарлаа! Алдааны мессеж: ' + errorMessage);
+                     });
+
+                 }, function () { // Confirm - NO
+                     //console.log('Rejected.')
+                 });
+            });
+        });
+
+        function getTrip(){
+            sendAjaxRequest('{{path('get_trip_package')}}', {}, function(data, status, xhr){
+                         if(status === 'success'){                         
+                             console.log("trip: ");
+                             console.log(data);
+                            $('.trip-dropdown .dropdown-menu a').remove();
+                            for (i = 0; i < $(data.tripList).length; i++) {
+                                
+                                var departDate = new Date(data.tripList[i].departure_datetime)
+                                var arrivalDate = new Date(data.tripList[i].arrival_datetime)
+                                var departure = departDate.getFullYear()+'.'+(parseInt(departDate.getMonth())+1)+'.'+departDate.getDate();
+                                var arrival = arrivalDate.getFullYear()+'.'+(parseInt(arrivalDate.getMonth())+1)+'.'+arrivalDate.getDate();
+                                
+                                $('.trip-dropdown .dropdown-menu').append( 
+                                        $( '<a class="dropdown-item" trip-id="'+data.tripList[i].id+'" >'
+                                            +'[ TripID: '+data.tripList[i].id+' ] '
+                                            +'[ '+( data.tripList[i].is_special === '1' ? 'Онцлох' : 'Энгийн' )+' ] '
+                                            +'[ '+departure+' - '+arrival+' ] '
+                                            +'[ '+data.tripList[i].country_name+' -> '+data.tripList[i].city_name+' ]'
+                                            +'[ Буудал: '+data.tripList[i].hotel_name+' ]'
+                                        +'</a>' ) );
+                            }
+//          Нислэг сонгох          
+                            $( ".trip-dropdown a.dropdown-item" ).on( "click", function() {
+                                $('#select_trip').text($(this).text());
+                                $('#select_trip').attr('trip-id', $(this).attr('trip-id'));
+                            });
+                         }else{
+                             console.log("failed to get trip");
+                         }
+                     }, function(jqXhr, textStatus, errorMessage){
+                         console.log("failed to get trip: " + errorMessage);
+                     });
+        }
+        
+        
+        function getFlights(){
+            sendAjaxRequest('{{path('get_flight')}}', {}, function(data, status, xhr){
+                if(status === 'success'){                         
+                    console.log("flight: ");
+                    console.log(data);
+                   $('.flight-dropdown .dropdown-menu a').remove();
+                   
+{#                   var flight_id = '{{flight_id.flight_id}}';#}
+                   for (i = 0; i < $(data.flightList).length; i++) {
+
+                       var departDate = new Date(data.flightList[i].departure_datetime)
+                       var arrivalDate = new Date(data.flightList[i].arrival_datetime)
+                       var departure = departDate.getFullYear()+'.'+(parseInt(departDate.getMonth())+1)+'.'+departDate.getDate();
+                       var arrival = arrivalDate.getFullYear()+'.'+(parseInt(arrivalDate.getMonth())+1)+'.'+arrivalDate.getDate();
+
+                       $('.flight-dropdown .dropdown-menu').append( 
+                               $( '<a class="dropdown-item" flight-id="'+data.flightList[i].id+'" >'
+                                   +'[ FlightID: '+data.flightList[i].id+' ] '
+                                   +'[ Хуваарь: '+departure+' - '+arrival+' ] '
+                                   +'[ Чиглэл: '+data.flightList[i].country_name+' -> '+data.flightList[i].city_name+' ]'
+                               +'</a>' ) );
+                       
+                       {#if(flight_id === data.flightList[i].id){
+                           $('#select_flight').text(
+                                   '[ FlightID: '+data.flightList[i].id+' ] '
+                                   +'[ Хуваарь: '+departure+' - '+arrival+' ] '
+                                   +'[ Чиглэл: '+data.flightList[i].country_name+' -> '+data.flightList[i].city_name+' ]'
+                            );
+                            $('#select_flight').attr('flight-id', data.flightList[i].id);
+                       }#}
+                   }
+                   
+//          Нислэг сонгох          
+                   $( ".flight-dropdown a.dropdown-item" ).on( "click", function() {
+                       $('#select_flight').text($(this).text());
+                       $('#select_flight').attr('flight-id', $(this).attr('flight-id'));
+                   });
+                }else{
+                    console.log("failed to get flight");
+                }
+            }, function(jqXhr, textStatus, errorMessage){
+                console.log("failed to get flight: " + errorMessage);
+            });
+        }
+    </script>
+{% endblock %}

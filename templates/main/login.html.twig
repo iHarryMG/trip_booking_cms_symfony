@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% block meta %}
+            <meta charset="UTF-8">
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            <meta name="description" content="">
+            <meta name="author" content="">
+        {% endblock %}
+        <title>{% block title %}Leisure Admin{% endblock %}</title>
+        {% block stylesheets %}
+            <!-- Custom fonts for this template -->
+            <link href="/library/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+            <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+            <!-- Custom styles for this template -->
+            <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+            <style>
+                html,body {
+                  height: 100%;
+                }
+
+                body {
+                  display: -ms-flexbox;
+                  display: flex;
+                  -ms-flex-align: center;
+                  align-items: center;
+                  padding-top: 40px;
+                  padding-bottom: 40px;
+                  background-color: #f5f5f5;
+                }
+
+                .form-signin {
+                  width: 100%;
+                  max-width: 330px;
+                  padding: 15px;
+                  margin: auto;
+                }
+                .form-signin .checkbox {
+                  font-weight: 400;
+                }
+                .form-signin .form-control {
+                  position: relative;
+                  box-sizing: border-box;
+                  height: auto;
+                  padding: 10px;
+                  font-size: 16px;
+                }
+                .form-signin .form-control:focus {
+                  z-index: 2;
+                }
+                .form-signin input[type="email"] {
+                  margin-bottom: -1px;
+                  border-bottom-right-radius: 0;
+                  border-bottom-left-radius: 0;
+                }
+                .form-signin input[type="password"] {
+                  margin-bottom: 10px;
+                  border-top-left-radius: 0;
+                  border-top-right-radius: 0;
+                }
+                .form-signin{
+                    margin-top: 5%;
+                }
+            </style>
+        {% endblock %}
+    </head>
+    <body class="text-center">
+        <form class="form-signin" method="post" action="{{ path('login_auth') }}">
+            <h1 class="h3 mb-3 font-weight-normal">Leisure Trip</h1>
+            
+            <label for="inputEmail" class="sr-only">Email address</label>
+            <input type="email" id="inputEmail" name="user_id" class="form-control" placeholder="Нэвтрэх ID" required="" autofocus="">
+            
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" id="inputPassword" name="user_pw" class="form-control" placeholder="Нууц үг" required="">
+            
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Нэвтрэх</button>
+        </form>
+        
+        {% block javascripts %}
+            <!-- Bootstrap core JavaScript-->
+            <script src="/library/vendor/jquery/jquery.min.js"></script>
+            <script src="/library/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+            <!-- Core plugin JavaScript-->
+            <script src="/library/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+            <!-- Custom scripts for all pages-->
+            <script src="/js/sb-admin-2.min.js"></script>
+        {% endblock %}
+        
+    </body>
+</html>

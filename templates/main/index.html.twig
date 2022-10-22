@@ -1,0 +1,170 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card-create-row-item div.dataTables_filter{
+            text-align: left!important;
+        }
+        .card-create-row-item div.dataTables_filter input{
+            width: 90%!important;
+        }
+        .card-create-row-item {
+            padding: 10px 0 5px 15px;
+        }
+        .card{
+            padding: 0;
+        }
+        .hotel-save-btn,.hotel-create-dropdown{
+            margin-left: 0.5em;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+      <!-- Page Heading -->
+      
+      <div class="card shadow mb-4 col-sm-12 col-md-12 col-lg-8">
+          <!-- Card Header - Accordion -->
+          <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+              <h6 class="m-0 font-weight-bold text-primary">Буудал нэмж бүртгэх</h6>
+          </a>
+          <!-- Card Content - Collapse -->
+          <div class="collapse show" id="collapseCardExample" style="">
+              <div class="table-responsive">
+                  <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                      <div class="row">
+                          <div class="card-create-row-item col-sm-12 col-md-6 col-lg-4">
+                              <div id="dataTable_filter" class="dataTables_filter">
+                                <!-- Example single danger button -->
+                                <div class="btn-group hotel-create-dropdown">
+                                  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    Улс сонгох
+                                  </button>
+                                  <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#">Тайланд</a>
+                                    <a class="dropdown-item" href="#">Хайнань</a>
+                                    <a class="dropdown-item" href="#">Вьетнам</a>
+                                    <a class="dropdown-item" href="#">Турк</a>
+                                  </div>
+                                </div>
+                              </div>
+                          </div>
+                          <div class="card-create-row-item col-sm-12 col-md-6 col-lg-4">
+                              <div class="btn-group hotel-create-dropdown">
+                                  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                      Буудлын Од
+                                  </button>
+                                  <div class="dropdown-menu">
+                                      <a class="dropdown-item" href="#">5</a>
+                                      <a class="dropdown-item" href="#">4</a>
+                                      <a class="dropdown-item" href="#">3</a>
+                                      <a class="dropdown-item" href="#">2</a>
+                                      <a class="dropdown-item" href="#">1</a>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="card-create-row-item col-sm-12 col-md-6 col-lg-4">
+                              <div class="btn-group hotel-create-dropdown">
+                                  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                      Хот сонгох
+                                  </button>
+                                  <div class="dropdown-menu">
+                                      <a class="dropdown-item" href="#">Бангкок</a>
+                                      <a class="dropdown-item" href="#">Пукет</a>
+                                      <a class="dropdown-item" href="#">Патаяа</a>
+                                      <a class="dropdown-item" href="#">Турк</a>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="card-create-row-item col-sm-12 col-md-6 col-lg-8">
+                              <div id="dataTable_filter" class="dataTables_filter">
+                                <input type="search" class="form-control form-control-sm" placeholder="Буудлын нэр" aria-controls="dataTable">
+                              </div>
+                          </div>
+                          <div class="card-create-row-item col-sm-12 col-md-6 col-lg-4">
+                              <div id="dataTable_filter" class="dataTables_filter">
+                                  <a href="#" class="hotel-save-btn btn btn-success btn-icon-split">
+                                      <span class="icon text-white-50">
+                                          <i class="fas fa-check"></i>
+                                      </span>
+                                      <span class="text">Хадгалах</span>
+                                  </a>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="row">
+                          
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      
+      
+      <!-- DataTales Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Бүртгэлтэй буудлын жагсаалт</h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Position</th>
+                  <th>Office</th>
+                  <th>Age</th>
+                  <th>Start date</th>
+                  <th>Salary</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>Name</th>
+                  <th>Position</th>
+                  <th>Office</th>
+                  <th>Age</th>
+                  <th>Start date</th>
+                  <th>Salary</th>
+                </tr>
+              </tfoot>
+              <tbody>
+                <tr>
+                  <td>Tiger Nixon</td>
+                  <td>System Architect</td>
+                  <td>Edinburgh</td>
+                  <td>61</td>
+                  <td>2011/04/25</td>
+                  <td>$320,800</td>
+                </tr>
+                <tr>
+                  <td>Garrett Winters</td>
+                  <td>Accountant</td>
+                  <td>Tokyo</td>
+                  <td>63</td>
+                  <td>2011/07/25</td>
+                  <td>$170,750</td>
+                </tr>
+                <tr>
+                  <td>Ashton Cox</td>
+                  <td>Junior Technical Author</td>
+                  <td>San Francisco</td>
+                  <td>66</td>
+                  <td>2009/01/12</td>
+                  <td>$86,000</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- /.container-fluid -->
+    
+{% endblock %}

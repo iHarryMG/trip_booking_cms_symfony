@@ -1,0 +1,288 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card-create-row-item div.dataTables_filter{
+            text-align: left!important;
+        }
+        .card-create-row-item div.dataTables_filter input{
+            width: 90%!important;
+        }
+        .card-create-row-item {
+            padding: 10px 0 5px 15px;
+        }
+        .card{
+            padding: 0;
+        }
+        .hotel-save-btn,.hotel-create-dropdown{
+            margin-left: 0.5em;
+        }
+        .dataTables_wrapper{
+            overflow: -webkit-paged-y;
+        }
+        .btn-primary {
+            color: #4e73df;
+            background-color: #fff;
+            border-color: #4e73df;
+        }
+        .form-control{
+            color: #4e73df;
+            background-color: #fff;
+            border-color: #4e73df;
+            height: 40px;
+            border-radius: .4rem;
+        }
+        #collapseCardExample{
+            padding: 10px;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+      <!-- Page Heading -->
+      
+      <div class="card shadow mb-4 col-sm-12 col-md-12 col-lg-8">
+          <!-- Card Header - Accordion -->
+          <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+              <h6 class="m-0 font-weight-bold text-primary">Буудал нэмж бүртгэх</h6>
+          </a>
+          <!-- Card Content - Collapse -->
+          <div class="collapse show" id="collapseCardExample" style="">
+              <div class="table-responsive">
+                  <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                      <div class="row">
+                          <div class="card-create-row-item col-sm-12 col-md-6 col-lg-4">
+                              <div id="dataTable_filter" class="dataTables_filter">
+                                <!-- Example single danger button -->
+                                <div class="btn-group hotel-create-dropdown"id="select_country">
+                                    <button country-id="" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        Улс сонгох
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        {% if countryNames is not null %}
+                                            {% for item in countryNames %}
+                                                <a class="dropdown-item" href="#" country-id="{{item.id}}">{{item.country_name}}</a>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                              </div>
+                          </div>
+                          <div class="card-create-row-item col-sm-12 col-md-6 col-lg-4">
+                              <div class="btn-group hotel-create-dropdown" id="select_city">
+                                  <button city-id="" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                      Хот сонгох
+                                  </button>
+                                  <div class="dropdown-menu">
+                                      
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="card-create-row-item col-sm-12 col-md-6 col-lg-4">
+                              <div class="btn-group hotel-create-dropdown" id="select_star">
+                                  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                      Буудлын Од
+                                  </button>
+                                  <div class="dropdown-menu">
+                                      <a class="dropdown-item" href="#">5</a>
+                                      <a class="dropdown-item" href="#">4</a>
+                                      <a class="dropdown-item" href="#">3</a>
+                                      <a class="dropdown-item" href="#">2</a>
+                                      <a class="dropdown-item" href="#">1</a>
+                                  </div>
+                              </div>
+                          </div>
+                          
+                          <div class="card-create-row-item col-sm-12 col-md-6 col-lg-8">
+                              <div id="dataTable_filter" class="dataTables_filter">
+                                <input type="search" id="hotel_name" class="form-control form-control-sm" placeholder="Буудлын нэр" aria-controls="dataTable">
+                              </div>
+                          </div>
+                          <div class="card-create-row-item col-sm-12 col-md-6 col-lg-4">
+                              <div id="dataTable_filter" class="dataTables_filter">
+                                  <a href="#" id="save_hotel" class="hotel-save-btn btn btn-success btn-icon-split">
+                                      <span class="icon text-white-50">
+                                          <i class="fas fa-check"></i>
+                                      </span>
+                                      <span class="text">Хадгалах</span>
+                                  </a>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="row">
+                          
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      
+      
+      <!-- DataTales Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Бүртгэлтэй буудлын жагсаалт</h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Буудлын нэр</th>
+                  <th>Од</th>
+                  <th>Хот</th>
+                  <th>Улс</th>
+                  <th>Бүртгэсэн огноо</th>
+                  <th>Зураг</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>ID</th>
+                  <th>Буудлын нэр</th>
+                  <th>Од</th>
+                  <th>Хот</th>
+                  <th>Улс</th>
+                  <th>Бүртгэсэн огноо</th>
+                  <th>Зураг</th>
+                </tr>
+              </tfoot>
+              <tbody id="hotel_list">
+               
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- /.container-fluid -->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function(){
+                
+            $( "#select_country a.dropdown-item" ).on( "click", function() {
+                $('#select_country button').text($(this).text());
+                $('#select_country button').attr('country-id', $(this).attr('country-id'));
+                $('#select_city button').text('Хот сонгох');
+                $('#select_star button').text('Буудлын Од');
+                
+                sendAjaxRequest('{{path('get_city')}}', {country_id: $(this).attr('country-id')}, function(data, status, xhr){
+                    if(status === 'success'){
+                            
+                            $('#select_city .dropdown-menu a').remove();
+                            for (i = 0; i < $(data.cityNames).length; i++) {
+                                $('#select_city .dropdown-menu').append( 
+                                        $( '<a class="dropdown-item" href="#" city-id="'+data.cityNames[i].id+'" >'+
+                                        data.cityNames[i].city_name
+                                        +'</a>' ) );
+                            }
+                                     
+                            $( "#select_city a.dropdown-item" ).on( "click", function() {
+                                $('#select_city button').text($(this).text());
+                                $('#select_city button').attr('city-id', $(this).attr('city-id'));
+                                $('#select_star button').text('Буудлын Од');
+                            });
+                        }else{
+                            console.log('status: ' + status + ', data: ');
+                            console.log(data);
+                        }
+                }, function(jqXhr, textStatus, errorMessage){
+                    console.log('Error' + errorMessage);
+                });
+                
+                
+            });
+            
+            //sendAjaxRequest('{{path('get_city')}}', {country_id: $(this).attr('country-id')}, function(data, status, xhr){}, function(jqXhr, textStatus, errorMessage){});
+            
+            $( "#select_star a.dropdown-item" ).on( "click", function() {
+                $('#select_star button').text($(this).text());
+            });
+           
+            UIkit.util.on('#save_hotel', 'click', function (e) {
+                e.preventDefault();
+                e.target.blur();
+                var param = {
+                        city_id : $( "#select_city button" ).attr('city-id'),
+                        hotel_name : $('#hotel_name').val(),
+                        hotel_star : $( "#select_star button" ).text(),
+                    };
+
+                    UIkit.modal.confirm('Хадгалахад итгэлтэй байна уу?').then(function () {
+                            
+                        sendAjaxRequest('{{path('register_hotel')}}', param, function(data, status, xhr){
+                             if(status === 'success'){
+                                 UIkit.modal.alert('Буудал амжилттай бүртгэгдлээ. Бүртгэгдсэн ID No: ' + data.result).then(function(){
+                                     getHotelList(); // Буудлын жагсаалт шинэчлэх
+                                 });
+                             }else{
+                                 UIkit.modal.alert('Буудал бүртгэхэд ямар нэгэн алдаа гарлаа! ' + status);
+                             }
+
+                         }, function(jqXhr, textStatus, errorMessage){
+                             UIkit.modal.alert('Буудал бүртгэхэд ямар нэгэн алдаа гарлаа! Алдааны мессеж: ' + errorMessage);
+                         });
+
+                     }, function () {
+                         //console.log('Rejected.')
+                     });
+               
+                    
+            });
+           
+           getHotelList();
+           
+        });
+          
+        function getHotelList(){
+            sendAjaxRequest('{{path('get_hotel_list')}}', {} , function(data, status, xhr){
+                
+                if(status === 'success'){
+                    $('#hotel_list tr').remove();
+                    for (i = 0; i < $(data.hotelList).length; i++) {
+                        $('#hotel_list').append( 
+                            $( '<tr>'
+                                +'<td>'+data.hotelList[i].id+'</td>'
+                                +'<td><a href={{path('edit_hotel')}}?hotel_id='+data.hotelList[i].id+'>'+data.hotelList[i].hotel_name+'</a></td>'
+                                +'<td>'+data.hotelList[i].hotel_star+'</td>'
+                                +'<td>'+data.hotelList[i].city_name+'</td>'
+                                +'<td>'+data.hotelList[i].country_name+'</td>'
+                                +'<td>'+data.hotelList[i].created_at+'</td>'
+                                +'<td><a href={{path('upload_image')}}?hotel_id='+data.hotelList[i].id+'>Зураг ('+data.hotelList[i].img_count+'ш)</a></td>'
+                              +'</tr>'
+                            )    
+                        );
+                    }
+                }else{
+                    $('#hotel_list tr').remove();
+                    $('#hotel_list').append( 
+                            $( '<tr>'
+                                +'<td colspan="6">Буудлын жагсаалт хоосон байна.</td>'
+                              +'</tr>'
+                            )    
+                        );
+                }
+                
+            }, function(jqXhr, textStatus, errorMessage){
+                $('#hotel_list tr').remove();
+                $('#hotel_list').append( 
+                        $( '<tr>'
+                            +'<td colspan="6">Буудлын жагсаалтыг авчирах боломжгүй байна.</td>'
+                          +'</tr>'
+                        )    
+                    );
+            });
+        }
+        
+    </script>
+{% endblock %}
